@@ -13,6 +13,12 @@ function dist_sq(coor1, coor2) {
   return a * a + b * b;
 }
 
+function half_way(coor1, coor2) {
+  let xh = Math.floor((coor1[0] + coor2[0]) / 2);
+  let yh = Math.floor((coor1[1] + coor2[1]) / 2);
+  return [xh, yh];
+}
+
 // Marking whether my base is at the top starting position or bottom
 var my_base = base_zxq;
 var enemy_base = base_a2c;
@@ -20,7 +26,6 @@ var my_star = star_zxq;
 var enemy_star = star_a2c;
 
 if (base_a2c.control == this_player_id) {
-  my_base = base_a2c;
   enemy_base = base_zxq;
 }
 
@@ -32,8 +37,31 @@ if (
   enemy_star = star_zxq;
 }
 
+console.log("here");
+for (let i = 0; i < 3; i++) {
+  my_spirits[i].mark = "per_harvesters";
+}
+
+var per_harvesters = my_spirits.filter((s) => s.mark == "per_harvester");
+console.log(`per_harvester length: ${per_harvesters.length}`);
+
+for (spirit of my_spirits) {
+  if (spirit.mark != "per_harvester") {
+    spirit.mark = "fighters";
+  }
+  if (spirit.mark == "per_harvester") {
+    console.log("Harvester");
+    spirit.move(my_star.position);
+  } else if (spirit.mark === "fighters") {
+    console.log("fighters");
+    spirit.move(my_base.position);
+  }
+  //spirit.move(half_way(my_base.position, my_star.position));
+}
+
 // Loop through all my spirits and making a state machine — if the
 // spirit is empty, go harvest energy. If full, give it to the base
+/*
 for (let spirit of my_spirits) {
   if (spirit.energy == spirit.energy_capacity) spirit.set_mark("charging");
   if (spirit.energy == 0) spirit.set_mark("harvesting");
@@ -57,4 +85,4 @@ for (let spirit of my_spirits) {
 
   // the last action (move, energize, ...) will overwrite any previous ones
   // in the same tick
-}
+} */
